@@ -95,7 +95,7 @@ export default function MeishiRow({ meishi, onUpdate, onSelect, isSelected }: Pr
               />
             )}
             <div className="text-sm">
-              <div className="font-bold">{meishi.name}</div>
+              <div className="font-bold text-gray-900">{meishi.name}</div>
               <div className="text-gray-600">{meishi.company}</div>
               {(meishi.department || meishi.position) && (
                 <div className="text-gray-500 text-xs">
@@ -107,9 +107,9 @@ export default function MeishiRow({ meishi, onUpdate, onSelect, isSelected }: Pr
             </div>
           </div>
         </td>
-        <td className="p-3 text-sm">☎ {meishi.phone}</td>
-        <td className="p-3 text-sm">✉ {meishi.email}</td>
-        <td className="p-3 text-sm">📍 {meishi.address}</td>
+        <td className="p-3 text-sm text-gray-900">☎ {meishi.phone}</td>
+        <td className="p-3 text-sm text-gray-900">✉ {meishi.email}</td>
+        <td className="p-3 text-sm text-gray-900">📍 {meishi.address}</td>
         <td className="p-3 text-sm">
           <div className="flex gap-2 items-center">
             <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${
@@ -145,96 +145,96 @@ export default function MeishiRow({ meishi, onUpdate, onSelect, isSelected }: Pr
       {isEditOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <h2 className="text-2xl font-bold mb-4">名刺を編集</h2>
+            <h2 className="text-2xl font-bold mb-4 text-gray-900">名刺を編集</h2>
             <form onSubmit={handleUpdate} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">名前 *</label>
+                  <label className="block text-sm font-medium mb-1 text-gray-700">名前 *</label>
                   <input
                     type="text"
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="w-full border border-gray-300 rounded px-3 py-2"
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">会社</label>
+                  <label className="block text-sm font-medium mb-1 text-gray-700">会社</label>
                   <input
                     type="text"
                     name="company"
                     value={formData.company}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 rounded px-3 py-2"
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">部署</label>
+                  <label className="block text-sm font-medium mb-1 text-gray-700">部署</label>
                   <input
                     type="text"
                     name="department"
                     value={formData.department}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 rounded px-3 py-2"
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">役職</label>
+                  <label className="block text-sm font-medium mb-1 text-gray-700">役職</label>
                   <input
                     type="text"
                     name="position"
                     value={formData.position}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 rounded px-3 py-2"
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">電話</label>
+                  <label className="block text-sm font-medium mb-1 text-gray-700">電話</label>
                   <input
                     type="text"
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 rounded px-3 py-2"
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">メール</label>
+                  <label className="block text-sm font-medium mb-1 text-gray-700">メール</label>
                   <input
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 rounded px-3 py-2"
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">住所</label>
+                <label className="block text-sm font-medium mb-1 text-gray-700">住所</label>
                 <input
                   type="text"
                   name="address"
                   value={formData.address}
                   onChange={handleChange}
-                  className="w-full border border-gray-300 rounded px-3 py-2"
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">分類</label>
+                <label className="block text-sm font-medium mb-1 text-gray-700">分類</label>
                 <select
                   name="category"
                   value={formData.category}
                   onChange={handleChange}
-                  className="w-full border border-gray-300 rounded px-3 py-2"
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900"
                 >
                   <option>個人</option>
                   <option>共有</option>
@@ -242,13 +242,13 @@ export default function MeishiRow({ meishi, onUpdate, onSelect, isSelected }: Pr
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">メモ</label>
+                <label className="block text-sm font-medium mb-1 text-gray-700">メモ</label>
                 <textarea
                   name="notes"
                   value={formData.notes}
                   onChange={handleChange}
                   rows={3}
-                  className="w-full border border-gray-300 rounded px-3 py-2"
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900"
                 />
               </div>
 
@@ -256,7 +256,7 @@ export default function MeishiRow({ meishi, onUpdate, onSelect, isSelected }: Pr
                 <button
                   type="button"
                   onClick={() => setIsEditOpen(false)}
-                  className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50"
+                  className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 text-gray-700"
                 >
                   キャンセル
                 </button>

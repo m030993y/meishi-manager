@@ -78,28 +78,28 @@ export default function Home() {
     <div className="min-h-screen bg-gray-100 flex">
       <div className="flex-1">
         <div className="max-w-7xl mx-auto p-6">
-          <h1 className="text-3xl font-bold mb-6">名刺管理</h1>
+          <h1 className="text-3xl font-bold mb-6 text-gray-900">名刺管理</h1>
 
           <AddMeishiForm onSuccess={fetchMeishi} />
 
           <div className="bg-white rounded-lg shadow p-4 mb-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-2">検索</label>
+                <label className="block text-sm font-medium mb-2 text-gray-700">検索</label>
                 <input
                   type="text"
                   placeholder="名前、会社、メールで検索..."
                   value={searchText}
                   onChange={(e) => setSearchText(e.target.value)}
-                  className="w-full border border-gray-300 rounded px-3 py-2"
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">分類</label>
+                <label className="block text-sm font-medium mb-2 text-gray-700">分類</label>
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="w-full border border-gray-300 rounded px-3 py-2"
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900"
                 >
                   <option value="">全て</option>
                   <option value="個人">個人</option>
@@ -113,17 +113,17 @@ export default function Home() {
           </div>
 
           {loading ? (
-            <p>読み込み中...</p>
+            <p className="text-gray-700">読み込み中...</p>
           ) : (
             <div className="bg-white rounded-lg shadow overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b bg-gray-50">
-                    <th className="p-3 text-left font-medium">名前 / 会社名 / 役職 / 部署</th>
-                    <th className="p-3 text-left font-medium">電話番号</th>
-                    <th className="p-3 text-left font-medium">メールアドレス</th>
-                    <th className="p-3 text-left font-medium">住所</th>
-                    <th className="p-3 text-left font-medium">交換日順</th>
+                    <th className="p-3 text-left font-medium text-gray-900">名前 / 会社名 / 役職 / 部署</th>
+                    <th className="p-3 text-left font-medium text-gray-900">電話番号</th>
+                    <th className="p-3 text-left font-medium text-gray-900">メールアドレス</th>
+                    <th className="p-3 text-left font-medium text-gray-900">住所</th>
+                    <th className="p-3 text-left font-medium text-gray-900">交換日順</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -152,7 +152,7 @@ export default function Home() {
           {/* 上：詳細情報 */}
           <div className="flex-1 p-6 space-y-4">
             <div className="flex justify-between items-start">
-              <h2 className="text-2xl font-bold">{selectedMeishi.name}</h2>
+              <h2 className="text-2xl font-bold text-gray-900">{selectedMeishi.name}</h2>
               <button
                 onClick={() => setSelectedMeishi(null)}
                 className="text-gray-500 hover:text-gray-700"
@@ -163,13 +163,13 @@ export default function Home() {
 
             <div>
               <label className="block text-sm font-medium text-gray-600">会社名</label>
-              <p className="text-base">{selectedMeishi.company}</p>
+              <p className="text-base text-gray-900">{selectedMeishi.company}</p>
             </div>
 
             {(selectedMeishi.department || selectedMeishi.position) && (
               <div>
                 <label className="block text-sm font-medium text-gray-600">部署 / 役職</label>
-                <p className="text-base">
+                <p className="text-base text-gray-900">
                   {selectedMeishi.department}
                   {selectedMeishi.department && selectedMeishi.position && ' / '}
                   {selectedMeishi.position}
@@ -180,33 +180,33 @@ export default function Home() {
             {selectedMeishi.email && (
               <div>
                 <label className="block text-sm font-medium text-gray-600">メール</label>
-                <p className="text-base">{selectedMeishi.email}</p>
+                <p className="text-base text-gray-900">{selectedMeishi.email}</p>
               </div>
             )}
 
             {selectedMeishi.phone && (
               <div>
                 <label className="block text-sm font-medium text-gray-600">携帯電話</label>
-                <p className="text-base">{selectedMeishi.phone}</p>
+                <p className="text-base text-gray-900">{selectedMeishi.phone}</p>
               </div>
             )}
 
             {selectedMeishi.address && (
               <div>
                 <label className="block text-sm font-medium text-gray-600">住所</label>
-                <p className="text-base">{selectedMeishi.address}</p>
+                <p className="text-base text-gray-900">{selectedMeishi.address}</p>
               </div>
             )}
 
             <div>
               <label className="block text-sm font-medium text-gray-600">交換日</label>
-              <p className="text-base">{new Date(selectedMeishi.created_at).toLocaleDateString('ja-JP')}</p>
+              <p className="text-base text-gray-900">{new Date(selectedMeishi.created_at).toLocaleDateString('ja-JP')}</p>
             </div>
 
             {selectedMeishi.notes && (
               <div>
                 <label className="block text-sm font-medium text-gray-600">メモ</label>
-                <p className="text-base">{selectedMeishi.notes}</p>
+                <p className="text-base text-gray-900">{selectedMeishi.notes}</p>
               </div>
             )}
 
