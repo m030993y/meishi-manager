@@ -408,7 +408,7 @@ export default function Home() {
                   <input
                     type="text"
                     className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
-                    placeholder="キモト"
+                    placeholder=""
                   />
                 </div>
 
@@ -454,7 +454,7 @@ export default function Home() {
                   <input
                     type="text"
                     className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
-                    placeholder="サンキホーム"
+                    placeholder=""
                   />
                 </div>
 
