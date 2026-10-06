@@ -200,7 +200,7 @@ export default function Home() {
                 )}
 
                 {/* 人物名 + 役職 + 会社 + プロフィール〇 */}
-                <div className="flex gap-4">
+                   <div className="flex gap-4">
                   <div className="flex-1">
                     <div className="text-2xl font-bold text-white">{selectedMeishi.name}</div>
                     {selectedMeishi.position && (
@@ -214,11 +214,7 @@ export default function Home() {
                     )}
                   </div>
                   <div className="w-20 h-20 flex-shrink-0 bg-gray-700 rounded-full flex items-center justify-center">
-                    {imageUrl ? (
-                      <img src={imageUrl} alt="プロフィール" className="w-full h-full object-cover rounded-full" />
-                    ) : (
-                      <span className="text-gray-500 text-2xl">👤</span>
-                    )}
+                    <span className="text-gray-500 text-3xl">👤</span>
                   </div>
                 </div>
 
