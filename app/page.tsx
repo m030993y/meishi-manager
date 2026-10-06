@@ -73,6 +73,10 @@ export default function Home() {
     setFilteredMeishi(filtered)
   }
 
+  const editImageUrl = editFormData?.image_filename
+    ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/meishi-images/${editFormData.image_filename}`
+    : null
+
   const imageUrl = selectedMeishi?.image_filename
     ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/meishi-images/${selectedMeishi.image_filename}`
     : null
@@ -351,128 +355,169 @@ export default function Home() {
 
         {/* 編集モーダル */}
         {isEditOpen && editFormData && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
-              <h2 className="text-2xl font-bold mb-4 text-gray-900">編集</h2>
-              <form onSubmit={handleEditSubmit} className="space-y-4">
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end z-50">
+            <div className="bg-gray-900 text-white w-full max-h-[90vh] rounded-t-lg overflow-y-auto">
+              {/* ヘッダー */}
+              <div className="sticky top-0 bg-gray-900 border-b border-gray-700 p-4 flex justify-between items-center">
+                <button
+                  onClick={() => setIsEditOpen(false)}
+                  className="text-white text-2xl"
+                >
+                  ✕
+                </button>
+                <h2 className="text-lg font-bold">名刺情報を編集</h2>
+                <button
+                  onClick={handleEditSubmit}
+                  disabled={editLoading}
+                  className="text-green-400 hover:text-green-300 px-2 py-1 text-sm"
+                >
+                  {editLoading ? '保存中...' : '完了'}
+                </button>
+              </div>
+
+              <form onSubmit={handleEditSubmit} className="p-6 space-y-6">
+                {/* 名刺画像 */}
+                {editImageUrl && (
+                  <div className="mb-6">
+                    <img src={editImageUrl} alt="名刺" className="w-full h-48 object-cover rounded-lg" />
+                  </div>
+                )}
+
+                {/* 人物名 + プロフィール〇 */}
+                <div className="flex gap-4">
+                  <div className="flex-1">
+                    <div>
+                      <label className="block text-sm text-gray-400 mb-2">名前</label>
+                      <input
+                        type="text"
+                        name="name"
+                        value={editFormData.name}
+                        onChange={handleEditChange}
+                        className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
+                      />
+                    </div>
+                  </div>
+                  <div className="w-20 h-20 flex-shrink-0 bg-gray-700 rounded-full flex items-center justify-center">
+                    <span className="text-gray-500 text-2xl">✎</span>
+                  </div>
+                </div>
+
+                {/* 名前フリガナ */}
                 <div>
-                  <label className="block text-sm font-medium mb-1 text-gray-700">名前 *</label>
+                  <label className="block text-sm text-gray-400 mb-2">名前（フリガナ）</label>
                   <input
                     type="text"
-                    name="name"
-                    value={editFormData.name}
-                    onChange={handleEditChange}
-                    required
-                    className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900"
+                    className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
+                    placeholder="キモト"
                   />
                 </div>
 
+                {/* 役職 */}
                 <div>
-                  <label className="block text-sm font-medium mb-1 text-gray-700">会社</label>
+                  <label className="block text-sm text-gray-400 mb-2">役職</label>
+                  <input
+                    type="text"
+                    name="position"
+                    value={editFormData.position}
+                    onChange={handleEditChange}
+                    className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
+                  />
+                </div>
+
+                {/* 部署 */}
+                <div>
+                  <label className="block text-sm text-gray-400 mb-2">部署</label>
+                  <input
+                    type="text"
+                    name="department"
+                    value={editFormData.department}
+                    onChange={handleEditChange}
+                    className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
+                  />
+                </div>
+
+                {/* 勤務先 */}
+                <div>
+                  <label className="block text-sm text-gray-400 mb-2">勤務先</label>
                   <input
                     type="text"
                     name="company"
                     value={editFormData.company}
                     onChange={handleEditChange}
-                    className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900"
+                    className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
-                    <label className="block text-sm font-medium mb-1 text-gray-700">部署</label>
-                    <input
-                      type="text"
-                      name="department"
-                      value={editFormData.department}
-                      onChange={handleEditChange}
-                      className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1 text-gray-700">役職</label>
-                    <input
-                      type="text"
-                      name="position"
-                      value={editFormData.position}
-                      onChange={handleEditChange}
-                      className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900"
-                    />
-                  </div>
+                {/* 勤務先フリガナ */}
+                <div>
+                  <label className="block text-sm text-gray-400 mb-2">勤務先（フリガナ）</label>
+                  <input
+                    type="text"
+                    className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
+                    placeholder="サンキホーム"
+                  />
                 </div>
 
+                {/* メールアドレス */}
                 <div>
-                  <label className="block text-sm font-medium mb-1 text-gray-700">メール</label>
+                  <label className="block text-sm text-gray-400 mb-2">メールアドレス</label>
                   <input
                     type="email"
                     name="email"
                     value={editFormData.email}
                     onChange={handleEditChange}
-                    className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900"
+                    className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
                   />
                 </div>
 
+                {/* 携帯電話 */}
                 <div>
-                  <label className="block text-sm font-medium mb-1 text-gray-700">電話</label>
+                  <label className="block text-sm text-gray-400 mb-2">携帯電話</label>
                   <input
                     type="text"
                     name="phone"
                     value={editFormData.phone}
                     onChange={handleEditChange}
-                    className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900"
+                    className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
                   />
                 </div>
 
+                {/* 住所 */}
                 <div>
-                  <label className="block text-sm font-medium mb-1 text-gray-700">住所</label>
+                  <label className="block text-sm text-gray-400 mb-2">住所</label>
                   <input
                     type="text"
                     name="address"
                     value={editFormData.address}
                     onChange={handleEditChange}
-                    className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900"
+                    className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
                   />
                 </div>
 
+                {/* 分類 */}
                 <div>
-                  <label className="block text-sm font-medium mb-1 text-gray-700">分類</label>
+                  <label className="block text-sm text-gray-400 mb-2">分類</label>
                   <select
                     name="category"
                     value={editFormData.category}
                     onChange={handleEditChange}
-                    className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900"
+                    className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
                   >
                     <option>個人</option>
                     <option>共有</option>
                   </select>
                 </div>
 
+                {/* メモ */}
                 <div>
-                  <label className="block text-sm font-medium mb-1 text-gray-700">メモ</label>
+                  <label className="block text-sm text-gray-400 mb-2">メモ</label>
                   <textarea
                     name="notes"
                     value={editFormData.notes}
                     onChange={handleEditChange}
-                    rows={2}
-                    className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900"
+                    rows={3}
+                    className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
                   />
-                </div>
-
-                <div className="flex gap-3 justify-end pt-4">
-                  <button
-                    type="button"
-                    onClick={() => setIsEditOpen(false)}
-                    className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 text-gray-700"
-                  >
-                    キャンセル
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={editLoading}
-                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-400"
-                  >
-                    {editLoading ? '保存中...' : '保存'}
-                  </button>
                 </div>
               </form>
             </div>
