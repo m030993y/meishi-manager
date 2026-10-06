@@ -199,7 +199,7 @@ export default function Home() {
                   </div>
                 )}
 
-                {/* 人物名 + 役職 + 会社 + プロフィール画像 */}
+                {/* 人物名 + 役職 + 会社 + プロフィール〇 */}
                 <div className="flex gap-4">
                   <div className="flex-1">
                     <div className="text-2xl font-bold text-white">{selectedMeishi.name}</div>
@@ -213,11 +213,13 @@ export default function Home() {
                       <div className="text-xs text-gray-500">{selectedMeishi.department}</div>
                     )}
                   </div>
-                  {imageUrl && (
-                    <div className="w-20 h-20 flex-shrink-0">
+                  <div className="w-20 h-20 flex-shrink-0 bg-gray-700 rounded-full flex items-center justify-center">
+                    {imageUrl ? (
                       <img src={imageUrl} alt="プロフィール" className="w-full h-full object-cover rounded-full" />
-                    </div>
-                  )}
+                    ) : (
+                      <span className="text-gray-500 text-2xl">👤</span>
+                    )}
+                  </div>
                 </div>
 
                 {/* セクション: メールアドレス */}
@@ -226,7 +228,12 @@ export default function Home() {
                     <div className="text-sm text-gray-400 mb-2">メールアドレス</div>
                     <div className="flex justify-between items-center">
                       <div className="text-white text-sm">{selectedMeishi.email}</div>
-                      <button className="text-gray-400 hover:text-white">✉</button>
+                      <a
+                        href={`mailto:${selectedMeishi.email}`}
+                        className="text-gray-400 hover:text-white text-xl"
+                      >
+                        ✉
+                      </a>
                     </div>
                   </div>
                 )}
@@ -238,8 +245,18 @@ export default function Home() {
                     <div className="flex justify-between items-center">
                       <div className="text-white text-sm">{selectedMeishi.phone}</div>
                       <div className="flex gap-2">
-                        <button className="text-gray-400 hover:text-white">💬</button>
-                        <button className="text-gray-400 hover:text-white">☎</button>
+                        <a
+                          href={`sms:${selectedMeishi.phone}`}
+                          className="text-gray-400 hover:text-white text-xl"
+                        >
+                          💬
+                        </a>
+                        <a
+                          href={`tel:${selectedMeishi.phone}`}
+                          className="text-gray-400 hover:text-white text-xl"
+                        >
+                          ☎
+                        </a>
                       </div>
                     </div>
                   </div>
