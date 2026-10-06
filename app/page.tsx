@@ -74,6 +74,23 @@ export default function Home() {
     ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/meishi-images/${selectedMeishi.image_filename}`
     : null
 
+  const handleDeleteMeishi = async (meishiId: string) => {
+    if (!confirm('削除しますか？')) return
+
+    const { error } = await supabase
+      .from('meishi')
+      .delete()
+      .eq('id', meishiId)
+
+    if (error) {
+      alert('エラー: ' + error.message)
+    } else {
+      alert('削除しました')
+      setSelectedMeishi(null)
+      fetchMeishi()
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-100">
       {/* スマホ版：カード形式 */}
@@ -153,75 +170,126 @@ export default function Home() {
           )}
         </div>
 
-        {/* 右下の浮くカメラボタン */}
-        <div className="fixed bottom-6 right-6 z-40">
-          <AddMeishiForm onSuccess={fetchMeishi} />
-        </div>
-
         {/* スマホ版：下に詳細パネル */}
         {selectedMeishi && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end z-50">
-            <div className="bg-white w-full max-h-[80vh] rounded-t-lg overflow-y-auto">
-              <div className="p-6 space-y-4">
-                <div className="flex justify-between items-start">
-                  <h2 className="text-2xl font-bold text-gray-900">{selectedMeishi.name}</h2>
+            <div className="bg-gray-900 text-white w-full max-h-[90vh] rounded-t-lg overflow-y-auto">
+              {/* ヘッダー */}
+              <div className="sticky top-0 bg-gray-900 border-b border-gray-700 p-4 flex justify-between items-center">
+                <button
+                  onClick={() => setSelectedMeishi(null)}
+                  className="text-gray-400 hover:text-white text-2xl"
+                >
+                  ←
+                </button>
+                <h2 className="text-lg font-bold">名刺詳細</h2>
+                <button
+                  onClick={() => setSelectedMeishi(null)}
+                  className="text-gray-400 hover:text-white text-2xl"
+                >
+                  ⋮
+                </button>
+              </div>
+
+              <div className="p-6 space-y-6">
+                {/* 名刺画像（大） */}
+                {imageUrl && (
+                  <div className="mb-6">
+                    <img src={imageUrl} alt="名刺" className="w-full h-48 object-cover rounded-lg" />
+                  </div>
+                )}
+
+                {/* 人物名 + 役職 + 会社 + プロフィール画像 */}
+                <div className="flex gap-4">
+                  <div className="flex-1">
+                    <div className="text-2xl font-bold text-white">{selectedMeishi.name}</div>
+                    {selectedMeishi.position && (
+                      <div className="text-sm text-gray-400">{selectedMeishi.position}</div>
+                    )}
+                    {selectedMeishi.company && (
+                      <div className="text-sm text-gray-400">{selectedMeishi.company}</div>
+                    )}
+                    {selectedMeishi.department && (
+                      <div className="text-xs text-gray-500">{selectedMeishi.department}</div>
+                    )}
+                  </div>
+                  {imageUrl && (
+                    <div className="w-20 h-20 flex-shrink-0">
+                      <img src={imageUrl} alt="プロフィール" className="w-full h-full object-cover rounded-full" />
+                    </div>
+                  )}
+                </div>
+
+                {/* セクション: メールアドレス */}
+                {selectedMeishi.email && (
+                  <div className="border-t border-gray-700 pt-4">
+                    <div className="text-sm text-gray-400 mb-2">メールアドレス</div>
+                    <div className="flex justify-between items-center">
+                      <div className="text-white text-sm">{selectedMeishi.email}</div>
+                      <button className="text-gray-400 hover:text-white">✉</button>
+                    </div>
+                  </div>
+                )}
+
+                {/* セクション: 携帯電話 */}
+                {selectedMeishi.phone && (
+                  <div className="border-t border-gray-700 pt-4">
+                    <div className="text-sm text-gray-400 mb-2">携帯電話</div>
+                    <div className="flex justify-between items-center">
+                      <div className="text-white text-sm">{selectedMeishi.phone}</div>
+                      <div className="flex gap-2">
+                        <button className="text-gray-400 hover:text-white">💬</button>
+                        <button className="text-gray-400 hover:text-white">☎</button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* セクション: 勤務先 */}
+                {selectedMeishi.company && (
+                  <div className="border-t border-gray-700 pt-4">
+                    <div className="text-sm text-gray-400 mb-2">勤務先</div>
+                    <div className="flex justify-between items-center">
+                      <div className="text-white text-sm">{selectedMeishi.company}</div>
+                      <button className="text-gray-400 hover:text-white text-lg">›</button>
+                    </div>
+                  </div>
+                )}
+
+                {/* セクション: メモ */}
+                <div className="border-t border-gray-700 pt-4">
+                  <div className="text-sm text-gray-400 mb-2 flex justify-between items-center">
+                    <span>メモ</span>
+                    <button className="text-gray-400 hover:text-white">+</button>
+                  </div>
+                  {selectedMeishi.notes ? (
+                    <div className="text-white text-sm">{selectedMeishi.notes}</div>
+                  ) : (
+                    <div className="text-gray-500 text-sm">メモがありません</div>
+                  )}
+                </div>
+
+                {/* セクション: グループ */}
+                <div className="border-t border-gray-700 pt-4">
+                  <div className="text-sm text-gray-400 mb-2">グループ</div>
+                  <span className={`inline-block px-3 py-1 rounded text-xs font-medium ${
+                    selectedMeishi.category === '個人' 
+                      ? 'bg-blue-900 text-blue-300' 
+                      : 'bg-green-900 text-green-300'
+                  }`}>
+                    {selectedMeishi.category}
+                  </span>
+                </div>
+
+                {/* 削除ボタン */}
+                <div className="border-t border-gray-700 pt-4">
                   <button
-                    onClick={() => setSelectedMeishi(null)}
-                    className="text-gray-500 hover:text-gray-700 text-2xl"
+                    onClick={() => handleDeleteMeishi(selectedMeishi.id)}
+                    className="w-full px-4 py-2 bg-red-900 text-red-300 rounded hover:bg-red-800"
                   >
-                    ✕
+                    削除
                   </button>
                 </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-600">会社名</label>
-                  <p className="text-gray-900">{selectedMeishi.company}</p>
-                </div>
-
-                {(selectedMeishi.department || selectedMeishi.position) && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-600">部署 / 役職</label>
-                    <p className="text-gray-900">
-                      {selectedMeishi.department}
-                      {selectedMeishi.department && selectedMeishi.position && ' / '}
-                      {selectedMeishi.position}
-                    </p>
-                  </div>
-                )}
-
-                {selectedMeishi.email && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-600">メール</label>
-                    <p className="text-gray-900">{selectedMeishi.email}</p>
-                  </div>
-                )}
-
-                {selectedMeishi.phone && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-600">携帯電話</label>
-                    <p className="text-gray-900">{selectedMeishi.phone}</p>
-                  </div>
-                )}
-
-                {selectedMeishi.address && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-600">住所</label>
-                    <p className="text-gray-900">{selectedMeishi.address}</p>
-                  </div>
-                )}
-
-                {selectedMeishi.notes && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-600">メモ</label>
-                    <p className="text-gray-900">{selectedMeishi.notes}</p>
-                  </div>
-                )}
-
-                {imageUrl && (
-                  <div>
-                    <img src={imageUrl} alt="名刺" className="w-full h-48 object-cover rounded" />
-                  </div>
-                )}
               </div>
             </div>
           </div>
