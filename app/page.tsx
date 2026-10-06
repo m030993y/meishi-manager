@@ -296,7 +296,7 @@ export default function Home() {
                           href={`tel:${selectedMeishi.phone}`}
                           className="text-gray-400 hover:text-white text-xl"
                         >
-                          ☎
+                          📞
                         </a>
                       </div>
                     </div>
