@@ -27,6 +27,9 @@ export default function Home() {
   const [searchText, setSearchText] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('')
   const [selectedMeishi, setSelectedMeishi] = useState<Meishi | null>(null)
+  const [isEditOpen, setIsEditOpen] = useState(false)
+  const [editFormData, setEditFormData] = useState<Meishi | null>(null)
+  const [editLoading, setEditLoading] = useState(false)
 
   useEffect(() => {
     fetchMeishi()
@@ -89,6 +92,33 @@ export default function Home() {
       setSelectedMeishi(null)
       fetchMeishi()
     }
+  }
+
+  const handleEditChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    if (!editFormData) return
+    const { name, value } = e.target
+    setEditFormData((prev) => prev ? { ...prev, [name]: value } : null)
+  }
+
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!editFormData) return
+
+    setEditLoading(true)
+    const { error } = await supabase
+      .from('meishi')
+      .update(editFormData)
+      .eq('id', editFormData.id)
+
+    if (error) {
+      alert('エラー: ' + error.message)
+    } else {
+      alert('更新しました')
+      setIsEditOpen(false)
+      fetchMeishi()
+      setSelectedMeishi(editFormData)
+    }
+    setEditLoading(false)
   }
 
   return (
@@ -183,12 +213,23 @@ export default function Home() {
                   ←
                 </button>
                 <h2 className="text-lg font-bold">名刺詳細</h2>
-                <button
-                  onClick={() => setSelectedMeishi(null)}
-                  className="text-gray-400 hover:text-white text-2xl"
-                >
-                  ⋮
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => {
+                      setEditFormData(selectedMeishi)
+                      setIsEditOpen(true)
+                    }}
+                    className="text-gray-400 hover:text-white px-2 py-1 text-sm"
+                  >
+                    編集
+                  </button>
+                  <button
+                    onClick={() => setSelectedMeishi(null)}
+                    className="text-gray-400 hover:text-white text-2xl"
+                  >
+                    ⋮
+                  </button>
+                </div>
               </div>
 
               <div className="p-6 space-y-6">
@@ -200,7 +241,7 @@ export default function Home() {
                 )}
 
                 {/* 人物名 + 役職 + 会社 + プロフィール〇 */}
-                   <div className="flex gap-4">
+                <div className="flex gap-4">
                   <div className="flex-1">
                     <div className="text-2xl font-bold text-white">{selectedMeishi.name}</div>
                     {selectedMeishi.position && (
@@ -304,6 +345,136 @@ export default function Home() {
                   </button>
                 </div>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* 編集モーダル */}
+        {isEditOpen && editFormData && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+              <h2 className="text-2xl font-bold mb-4 text-gray-900">編集</h2>
+              <form onSubmit={handleEditSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1 text-gray-700">名前 *</label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={editFormData.name}
+                    onChange={handleEditChange}
+                    required
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-1 text-gray-700">会社</label>
+                  <input
+                    type="text"
+                    name="company"
+                    value={editFormData.company}
+                    onChange={handleEditChange}
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-sm font-medium mb-1 text-gray-700">部署</label>
+                    <input
+                      type="text"
+                      name="department"
+                      value={editFormData.department}
+                      onChange={handleEditChange}
+                      className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1 text-gray-700">役職</label>
+                    <input
+                      type="text"
+                      name="position"
+                      value={editFormData.position}
+                      onChange={handleEditChange}
+                      className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-1 text-gray-700">メール</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={editFormData.email}
+                    onChange={handleEditChange}
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-1 text-gray-700">電話</label>
+                  <input
+                    type="text"
+                    name="phone"
+                    value={editFormData.phone}
+                    onChange={handleEditChange}
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-1 text-gray-700">住所</label>
+                  <input
+                    type="text"
+                    name="address"
+                    value={editFormData.address}
+                    onChange={handleEditChange}
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-1 text-gray-700">分類</label>
+                  <select
+                    name="category"
+                    value={editFormData.category}
+                    onChange={handleEditChange}
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900"
+                  >
+                    <option>個人</option>
+                    <option>共有</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-1 text-gray-700">メモ</label>
+                  <textarea
+                    name="notes"
+                    value={editFormData.notes}
+                    onChange={handleEditChange}
+                    rows={2}
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900"
+                  />
+                </div>
+
+                <div className="flex gap-3 justify-end pt-4">
+                  <button
+                    type="button"
+                    onClick={() => setIsEditOpen(false)}
+                    className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 text-gray-700"
+                  >
+                    キャンセル
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={editLoading}
+                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-400"
+                  >
+                    {editLoading ? '保存中...' : '保存'}
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         )}
